@@ -2,9 +2,6 @@
 node_modules/
 npm-debug.log*
 .env
-
-# Material de grabacion del video (no forma parte de la entrega)
-grabacion/
 *.bat
 *.mp4
 *.mkv
