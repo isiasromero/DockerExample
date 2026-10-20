@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= titulo %> | Tienda Docker</title>
+  <link rel="stylesheet" href="/estilos.css">
+</head>
+<body>
+  <header class="barra">
+    <div class="contenedor barra__fila">
+      <a class="marca" href="/">
+        <span class="marca__icono" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M3 11h3v3H3zm4 0h3v3H7zm4 0h3v3h-3zm-4-4h3v3H7zm4 0h3v3h-3zm4 4h3v3h-3zm-4-8h3v3h-3zM22 12.5c-.6-.4-1.9-.5-2.9-.3-.1-1-.7-1.9-1.6-2.6l-.3-.2-.2.3c-.4.6-.6 1.5-.5 2.2 0 .5.2 1 .5 1.4-.6.3-1.4.4-2 .4H1.9l-.1.5c-.1 1.7.2 3.4 1 4.9.8 1.4 2 2.4 3.6 3 1.7.6 3.6.8 5.3.5 1.4-.2 2.7-.7 3.9-1.4 1-.6 1.8-1.3 2.5-2.2 1.2-1.4 1.9-3 2.5-4.4h.2c1.3 0 2.1-.5 2.6-1l.3-.4z"/></svg>
+        </span>
+        Tienda Docker
+      </a>
+      <nav class="menu" aria-label="Principal">
+        <a href="/" class="<%= ruta === '/' ? 'activo' : '' %>">Inicio</a>
+        <a href="/categorias" class="<%= ruta === '/categorias' ? 'activo' : '' %>">Categorías</a>
+        <a href="/productos/nuevo" class="<%= ruta === '/productos/nuevo' ? 'activo' : '' %>">Registrar</a>
+        <a href="/productos" class="<%= ruta === '/productos' ? 'activo' : '' %>">Ver datos</a>
+      </nav>
+    </div>
+  </header>
+  <main class="contenedor">
+    <% if (ok) { %>
+      <div class="alerta alerta--ok" role="status"><%= ok %></div>
+    <% } %>

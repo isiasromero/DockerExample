@@ -1,0 +1,61 @@
+<%- include('partials/header') %>
+
+<section class="hero">
+  <div>
+    <p class="eyebrow">Aplicación contenerizada</p>
+    <h1>Inventario con Node.js y MySQL en Docker</h1>
+    <p class="lead">Dos contenedores conectados por una red privada de Docker: el servidor web atiende esta página y la base de datos guarda la información en un volumen persistente.</p>
+    <div class="acciones">
+      <a class="boton" href="/productos/nuevo">Registrar producto</a>
+      <a class="boton boton--sec" href="/productos">Ver datos guardados</a>
+    </div>
+  </div>
+</section>
+
+<section class="rejilla rejilla--3">
+  <article class="tarjeta">
+    <h2 class="tarjeta__titulo">Contenedor web</h2>
+    <dl class="datos">
+      <dt>Hostname (ID)</dt><dd class="mono"><%= contenedor %></dd>
+      <dt>Node.js</dt><dd><%= info.node %></dd>
+      <dt>Sistema</dt><dd><%= info.so %></dd>
+    </dl>
+    <span class="chip chip--ok">En ejecución</span>
+  </article>
+  <article class="tarjeta">
+    <h2 class="tarjeta__titulo">Contenedor de base de datos</h2>
+    <dl class="datos">
+      <dt>Host (servicio)</dt><dd class="mono"><%= info.dbHost %></dd>
+      <dt>Base de datos</dt><dd><%= info.dbName %></dd>
+      <dt>MySQL</dt><dd><%= info.version %></dd>
+    </dl>
+    <span class="chip chip--ok">Conectado</span>
+  </article>
+  <article class="tarjeta">
+    <h2 class="tarjeta__titulo">Registros almacenados</h2>
+    <div class="cifras">
+      <div><strong><%= info.categorias %></strong><span>categorías</span></div>
+      <div><strong><%= info.productos %></strong><span>productos</span></div>
+    </div>
+    <div class="progreso" aria-label="Meta de 15 productos">
+      <div class="progreso__barra" style="width: <%= Math.min(100, Math.round(info.productos / 15 * 100)) %>%"></div>
+    </div>
+    <small class="tenue">Meta del tutorial: 15 productos (<%= Math.min(info.productos, 15) %>/15)</small>
+  </article>
+</section>
+
+<section class="tarjeta">
+  <h2 class="tarjeta__titulo">Arquitectura</h2>
+  <div class="arquitectura">
+    <div class="nodo">Navegador<br><small>localhost:3000</small></div>
+    <div class="flecha">→</div>
+    <div class="nodo nodo--docker">node-web<br><small>Express · puerto 3000</small></div>
+    <div class="flecha">→</div>
+    <div class="nodo nodo--docker">mysql-db<br><small>MySQL 8 · puerto 3306</small></div>
+    <div class="flecha">→</div>
+    <div class="nodo">Volumen<br><small>db_data</small></div>
+  </div>
+  <p class="tenue">Red interna: <span class="mono">red-tienda</span>. El servidor web se conecta a la base de datos usando el nombre del servicio <span class="mono">db</span>.</p>
+</section>
+
+<%- include('partials/footer') %>

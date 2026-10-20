@@ -1,0 +1,59 @@
+<%- include('partials/header') %>
+<% const pesos = (n) => Number(n).toLocaleString('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }); %>
+
+<div class="encabezado">
+  <div>
+    <h1>Productos registrados</h1>
+    <p class="lead">Consulta directa a MySQL con <span class="mono">INNER JOIN</span> entre <span class="mono">productos</span> y <span class="mono">categorias</span>.</p>
+  </div>
+  <form method="get" action="/productos" class="filtro">
+    <label>Filtrar por categoría
+      <select name="categoria" onchange="this.form.submit()">
+        <option value="">Todas</option>
+        <% categorias.forEach(c => { %>
+          <option value="<%= c.id %>" <%= filtro === c.id ? 'selected' : '' %>><%= c.nombre %></option>
+        <% }) %>
+      </select>
+    </label>
+  </form>
+</div>
+
+<section class="rejilla rejilla--4">
+  <div class="kpi"><span>Registros</span><strong><%= resumen.total %></strong></div>
+  <div class="kpi"><span>Disponibles</span><strong><%= resumen.disponibles %></strong></div>
+  <div class="kpi"><span>Unidades en stock</span><strong><%= resumen.unidades.toLocaleString('es-CO') %></strong></div>
+  <div class="kpi"><span>Valor del inventario</span><strong><%= pesos(resumen.valor) %></strong></div>
+</section>
+
+<section class="tarjeta">
+  <% if (productos.length === 0) { %>
+    <div class="vacio">
+      <p>Aún no hay productos guardados.</p>
+      <a class="boton" href="/productos/nuevo">Registrar el primero</a>
+    </div>
+  <% } else { %>
+    <div class="tabla-scroll">
+      <table class="tabla">
+        <thead>
+          <tr><th>ID</th><th>Producto</th><th>Categoría</th><th class="num">Precio</th><th class="num">Stock</th><th>Disponible</th><th>Ingreso</th></tr>
+        </thead>
+        <tbody>
+          <% productos.forEach(p => { %>
+            <tr>
+              <td><%= p.id %></td>
+              <td><strong><%= p.nombre %></strong></td>
+              <td><span class="chip chip--mono"><%= p.categoria_codigo %></span> <%= p.categoria %></td>
+              <td class="num"><%= pesos(p.precio) %></td>
+              <td class="num"><%= p.stock %></td>
+              <td><span class="chip <%= p.disponible ? 'chip--ok' : 'chip--off' %>"><%= p.disponible ? 'Sí' : 'No' %></span></td>
+              <td><%= p.fecha_ingreso %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>
+<p class="tenue">También disponible en formato JSON: <a href="/api/productos" class="mono">/api/productos</a></p>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,21 @@
+# Dependencias y archivos generados
+node_modules/
+npm-debug.log*
+.env
+
+# Material de grabacion del video (no forma parte de la entrega)
+grabacion/
+*.bat
+*.mp4
+*.mkv
+*.mov
+
+# Documentacion interna: solo se publica el README
+*.md
+!README.md
+
+# Configuracion local del editor y del sistema
+.vscode/
+.DS_Store
+Thumbs.db
+demo/nginx.conf

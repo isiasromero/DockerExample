@@ -1,0 +1,52 @@
+name: tienda
+
+services:
+  db:
+    build: ./db
+    image: tienda-mysql:1.0
+    container_name: mysql-db
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: tienda
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app123
+    ports:
+      - "3307:3306"            # opcional: acceso desde MySQL Workbench
+    volumes:
+      - db_data:/var/lib/mysql # persistencia de los datos
+    networks:
+      - red-tienda
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot123"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  web:
+    build: ./web
+    image: tienda-web:1.0
+    container_name: node-web
+    environment:
+      PORT: 3000
+      DB_HOST: db              # nombre del servicio dentro de la red de Docker
+      DB_PORT: 3306
+      DB_USER: app
+      DB_PASSWORD: app123
+      DB_NAME: tienda
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - red-tienda
+    restart: unless-stopped
+
+networks:
+  red-tienda:
+    driver: bridge
+
+volumes:
+  db_data:

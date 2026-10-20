@@ -1,0 +1,52 @@
+<%- include('partials/header') %>
+
+<h1>Categorías</h1>
+<p class="lead">Tabla padre del modelo. Cada producto pertenece a una categoría (relación 1 a N).</p>
+
+<div class="rejilla rejilla--form">
+  <section class="tarjeta">
+    <h2 class="tarjeta__titulo">Nueva categoría</h2>
+    <% if (errores.length) { %>
+      <div class="alerta alerta--error" role="alert"><ul><% errores.forEach(e => { %><li><%= e %></li><% }) %></ul></div>
+    <% } %>
+    <form method="post" action="/categorias" class="formulario" novalidate>
+      <label>Código <small>(5 caracteres)</small>
+        <input name="codigo" maxlength="5" required pattern="[A-Za-z0-9]{5}" value="<%= datos.codigo || '' %>" placeholder="ELE01">
+      </label>
+      <label>Nombre
+        <input name="nombre" maxlength="80" required value="<%= datos.nombre || '' %>" placeholder="Electrodomésticos">
+      </label>
+      <label>Descripción
+        <textarea name="descripcion" rows="3" placeholder="Breve descripción"><%= datos.descripcion || '' %></textarea>
+      </label>
+      <label>Fecha de creación
+        <input type="date" name="fecha_creacion" required value="<%= datos.fecha_creacion || '' %>">
+      </label>
+      <label class="check"><input type="checkbox" name="activa" <%= datos.activa ? 'checked' : '' %>> Activa</label>
+      <button class="boton" type="submit">Guardar categoría</button>
+    </form>
+  </section>
+
+  <section class="tarjeta">
+    <h2 class="tarjeta__titulo">Categorías registradas (<%= categorias.length %>)</h2>
+    <div class="tabla-scroll">
+      <table class="tabla">
+        <thead><tr><th>ID</th><th>Código</th><th>Nombre</th><th>Activa</th><th>Creación</th><th class="num">Productos</th></tr></thead>
+        <tbody>
+          <% categorias.forEach(c => { %>
+            <tr>
+              <td><%= c.id %></td>
+              <td class="mono"><%= c.codigo %></td>
+              <td><strong><%= c.nombre %></strong><br><small class="tenue"><%= c.descripcion || '' %></small></td>
+              <td><span class="chip <%= c.activa ? 'chip--ok' : 'chip--off' %>"><%= c.activa ? 'Sí' : 'No' %></span></td>
+              <td><%= c.fecha_creacion %></td>
+              <td class="num"><a href="/productos?categoria=<%= c.id %>"><%= c.total_productos %></a></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<%- include('partials/footer') %>
