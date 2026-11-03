@@ -275,3 +275,9 @@ DockerExample/
 - **`docker` no responde o dice que no encuentra el motor:** abrir Docker Desktop y esperar a *Engine running*.
 - **Las tildes salen mal en la consola de MySQL:** usar `--default-character-set=utf8mb4`, como en los comandos de la sección 6.
 - **La aplicación no conecta a la base de datos:** revisar `docker compose logs db` y `docker compose logs web`; el servidor web reintenta la conexión durante un minuto al arrancar.
+
+## 15. Despliegue en Kubernetes con Azure AKS (Unidad 3)
+
+La carpeta [`aks/`](aks/README.md) contiene los manifiestos y scripts para desplegar esta misma tienda en un clúster de Azure Kubernetes Service (nivel Free), junto con un segundo servicio sin estado (whoami) para mostrar balanceo, escalado, autorreparación, actualización progresiva y rollback.
+
+Video: https://www.youtube.com/watch?v=hNiRta-qRFQ
