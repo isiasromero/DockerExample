@@ -1,0 +1,22 @@
+# Datos de conexion: lo no sensible en ConfigMap y las claves en Secret
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tienda-config
+  namespace: tienda
+data:
+  DB_HOST: db
+  DB_PORT: "3306"
+  DB_NAME: tienda
+  PORT: "3000"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tienda-secret
+  namespace: tienda
+type: Opaque
+stringData:
+  MYSQL_ROOT_PASSWORD: root123
+  MYSQL_USER: app
+  MYSQL_PASSWORD: app123

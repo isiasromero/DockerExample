@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tienda
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: whoami

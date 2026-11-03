@@ -1,0 +1,57 @@
+# Base de datos con estado: StatefulSet + disco persistente de Azure (managed-csi)
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  namespace: tienda
+spec:
+  clusterIP: None            # servicio "headless": nombre DNS estable "db"
+  selector: { app: mysql }
+  ports: [{ port: 3306, name: mysql }]
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+  namespace: tienda
+spec:
+  serviceName: db
+  replicas: 1
+  selector:
+    matchLabels: { app: mysql }
+  template:
+    metadata:
+      labels: { app: mysql }
+    spec:
+      containers:
+        - name: mysql
+          image: __ACR__/tienda-mysql:1.0
+          args: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+          env:
+            - { name: MYSQL_DATABASE, value: tienda }
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom: { secretKeyRef: { name: tienda-secret, key: MYSQL_ROOT_PASSWORD } }
+            - name: MYSQL_USER
+              valueFrom: { secretKeyRef: { name: tienda-secret, key: MYSQL_USER } }
+            - name: MYSQL_PASSWORD
+              valueFrom: { secretKeyRef: { name: tienda-secret, key: MYSQL_PASSWORD } }
+          ports: [{ containerPort: 3306 }]
+          resources:
+            requests: { cpu: 250m, memory: 512Mi }
+            limits:   { cpu: "1",  memory: 1Gi }
+          readinessProbe:
+            exec: { command: ["sh", "-c", "mysqladmin ping -h 127.0.0.1 -uroot -p$MYSQL_ROOT_PASSWORD"] }
+            initialDelaySeconds: 20
+            periodSeconds: 5
+          volumeMounts:
+            - name: datos
+              mountPath: /var/lib/mysql
+              subPath: mysql      # evita el error de MySQL por la carpeta lost+found del disco
+  volumeClaimTemplates:
+    - metadata:
+        name: datos
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: managed-csi
+        resources:
+          requests: { storage: 4Gi }
